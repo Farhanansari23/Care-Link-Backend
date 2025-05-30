@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Healthcare App Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .hidden {
+        display: none;
+      }
+      .section {
+        margin-bottom: 2rem;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6">Healthcare App Admin</h1>
+
+      <!-- Login Form -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Login</h2>
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block">Email or Phone</label>
+            <input
+              type="text"
+              id="loginEmailOrPhone"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Password</label>
+            <input
+              type="password"
+              id="loginPassword"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Login
+          </button>
+        </form>
+        <p id="loginError" class="error hidden"></p>
+      </div>
+
+      <!-- Register Form -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Register</h2>
+        <form id="registerForm" class="space-y-4">
+          <div>
+            <label class="block">Name</label>
+            <input
+              type="text"
+              id="registerName"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Email</label>
+            <input
+              type="email"
+              id="registerEmail"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Phone Number</label>
+            <input
+              type="text"
+              id="registerPhone"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Password</label>
+            <input
+              type="password"
+              id="registerPassword"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Address</label>
+            <input
+              type="text"
+              id="registerAddress"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <div>
+            <label class="block">User Type</label>
+            <select id="registerUserType" class="w-full border p-2 rounded">
+              <option value="patient">Patient</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Register
+          </button>
+        </form>
+        <p id="registerError" class="error hidden"></p>
+      </div>
+
+      <!-- UserDetail Section -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Users</h2>
+        <form id="userForm" class="space-y-4 hidden">
+          <input type="hidden" id="userId" />
+          <div>
+            <label class="block">Name</label>
+            <input
+              type="text"
+              id="userName"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Email</label>
+            <input
+              type="email"
+              id="userEmail"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Phone Number</label>
+            <input
+              type="text"
+              id="userPhone"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block"
+              >Password (leave blank to keep unchanged)</label
+            >
+            <input
+              type="password"
+              id="userPassword"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <div>
+            <label class="block">Address</label>
+            <input
+              type="text"
+              id="userAddress"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <div>
+            <label class="block">User Type</label>
+            <select id="userUserType" class="w-full border p-2 rounded">
+              <option value="patient">Patient</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div>
+            <label class="block">Active</label>
+            <input type="checkbox" id="userIsActive" checked />
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Save User
+          </button>
+          <button
+            type="button"
+            id="userCancel"
+            class="bg-gray-500 text-white px-4 py-2 rounded"
+          >
+            Cancel
+          </button>
+        </form>
+        <button
+          id="addUser"
+          class="bg-green-500 text-white px-4 py-2 rounded mb-4"
+        >
+          Add User
+        </button>
+        <table class="w-full border">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Name</th>
+              <th class="border p-2">Email</th>
+              <th class="border p-2">Phone</th>
+              <th class="border p-2">User Type</th>
+              <th class="border p-2">Active</th>
+              <th class="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTable"></tbody>
+        </table>
+        <p id="userError" class="error hidden"></p>
+      </div>
+
+      <!-- Category Section -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Categories</h2>
+        <form id="categoryForm" class="space-y-4 hidden">
+          <input type="hidden" id="categoryId" />
+          <div>
+            <label class="block">Name</label>
+            <input
+              type="text"
+              id="categoryName"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Save Category
+          </button>
+          <button
+            type="button"
+            id="categoryCancel"
+            class="bg-gray-500 text-white px-4 py-2 rounded"
+          >
+            Cancel
+          </button>
+        </form>
+        <button
+          id="addCategory"
+          class="bg-green-500 text-white px-4 py-2 rounded mb-4"
+        >
+          Add Category
+        </button>
+        <table class="w-full border">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Name</th>
+              <th class="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="categoryTable"></tbody>
+        </table>
+        <p id="categoryError" class="error hidden"></p>
+      </div>
+
+      <!-- Healthcenter Section -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Health Centers</h2>
+        <form id="healthcenterForm" class="space-y-4 hidden">
+          <input type="hidden" id="healthcenterId" />
+          <div>
+            <label class="block">Name</label>
+            <input
+              type="text"
+              id="healthcenterName"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Location</label>
+            <input
+              type="text"
+              id="healthcenterLocation"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Admin User ID</label>
+            <input
+              type="text"
+              id="healthcenterUserId"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Contact Detail</label>
+            <input
+              type="text"
+              id="healthcenterContact"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Healthcare Detail</label>
+            <input
+              type="text"
+              id="healthcenterDetail"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Save Health Center
+          </button>
+          <button
+            type="button"
+            id="healthcenterCancel"
+            class="bg-gray-500 text-white px-4 py-2 rounded"
+          >
+            Cancel
+          </button>
+        </form>
+        <button
+          id="addHealthcenter"
+          class="bg-green-500 text-white px-4 py-2 rounded mb-4"
+        >
+          Add Health Center
+        </button>
+        <table class="w-full border">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Name</th>
+              <th class="border p-2">Location</th>
+              <th class="border p-2">Admin</th>
+              <th class="border p-2">Contact</th>
+              <th class="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="healthcenterTable"></tbody>
+        </table>
+        <p id="healthcenterError" class="error hidden"></p>
+      </div>
+
+      <!-- DoctorDetail Section -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Doctors</h2>
+        <form id="doctorForm" class="space-y-4 hidden">
+          <input type="hidden" id="doctorId" />
+          <div>
+            <label class="block">Name</label>
+            <input
+              type="text"
+              id="doctorName"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Description</label>
+            <input
+              type="text"
+              id="doctorDescription"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <div>
+            <label class="block">Category IDs (comma-separated)</label>
+            <input
+              type="text"
+              id="doctorCategoryIds"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Healthcenter IDs (comma-separated)</label>
+            <input
+              type="text"
+              id="doctorHealthcenterIds"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Rating (0-5)</label>
+            <input
+              type="number"
+              id="doctorRating"
+              min="0"
+              max="5"
+              step="0.1"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Save Doctor
+          </button>
+          <button
+            type="button"
+            id="doctorCancel"
+            class="bg-gray-500 text-white px-4 py-2 rounded"
+          >
+            Cancel
+          </button>
+        </form>
+        <button
+          id="addDoctor"
+          class="bg-green-500 text-white px-4 py-2 rounded mb-4"
+        >
+          Add Doctor
+        </button>
+        <table class="w-full border">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Name</th>
+              <th class="border p-2">Categories</th>
+              <th class="border p-2">Health Centers</th>
+              <th class="border p-2">Rating</th>
+              <th class="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="doctorTable"></tbody>
+        </table>
+        <p id="doctorError" class="error hidden"></p>
+      </div>
+
+      <!-- Schedule Section -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Schedules</h2>
+        <form id="scheduleForm" class="space-y-4 hidden">
+          <input type="hidden" id="scheduleId" />
+          <div>
+            <label class="block">Doctor ID</label>
+            <input
+              type="text"
+              id="scheduleDoctorId"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Date (YYYY-MM-DD)</label>
+            <input
+              type="date"
+              id="scheduleDate"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block"
+              >Time Slots (JSON: [{startTime, endTime, isAvailable}])</label
+            >
+            <textarea
+              id="scheduleTimeSlots"
+              class="w-full border p-2 rounded"
+              required
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Save Schedule
+          </button>
+          <button
+            type="button"
+            id="scheduleCancel"
+            class="bg-gray-500 text-white px-4 py-2 rounded"
+          >
+            Cancel
+          </button>
+        </form>
+        <button
+          id="addSchedule"
+          class="bg-green-500 text-white px-4 py-2 rounded mb-4"
+        >
+          Add Schedule
+        </button>
+        <table class="w-full border">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Doctor</th>
+              <th class="border p-2">Date</th>
+              <th class="border p-2">Time Slots</th>
+              <th class="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleTable"></tbody>
+        </table>
+        <p id="scheduleError" class="error hidden"></p>
+      </div>
+
+      <!-- AppointmentDetail Section -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Appointments</h2>
+        <form id="appointmentForm" class="space-y-4 hidden">
+          <input type="hidden" id="appointmentId" />
+          <div>
+            <label class="block">Doctor ID</label>
+            <input
+              type="text"
+              id="appointmentDoctorId"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Healthcenter ID</label>
+            <input
+              type="text"
+              id="appointmentHealthcenterId"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Schedule ID</label>
+            <input
+              type="text"
+              id="appointmentScheduleId"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Time Slot Start</label>
+            <input
+              type="text"
+              id="appointmentTimeSlotStart"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block">Time Slot End</label>
+            <input
+              type="text"
+              id="appointmentTimeSlotEnd"
+              class="w-full border p-2 rounded"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Save Appointment
+          </button>
+          <button
+            type="button"
+            id="appointmentCancel"
+            class="bg-gray-500 text-white px-4 py-2 rounded"
+          >
+            Cancel
+          </button>
+        </form>
+        <button
+          id="addAppointment"
+          class="bg-green-500 text-white px-4 py-2 rounded mb-4"
+        >
+          Add Appointment
+        </button>
+        <table class="w-full border">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Doctor</th>
+              <th class="border p-2">Health Center</th>
+              <th class="border p-2">Patient</th>
+              <th class="border p-2">Date & Time</th>
+              <th class="border p-2">Status</th>
+              <th class="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appointmentTable"></tbody>
+        </table>
+        <p id="appointmentError" class="error hidden"></p>
+      </div>
+
+      <!-- Recommendation Section -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Recommendations</h2>
+        <button
+          id="fetchRecommendations"
+          class="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+        >
+          Get Recommendations
+        </button>
+        <table class="w-full border">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Type</th>
+              <th class="border p-2">Name</th>
+              <th class="border p-2">Details</th>
+            </tr>
+          </thead>
+          <tbody id="recommendationTable"></tbody>
+        </table>
+        <p id="recommendationError" class="error hidden"></p>
+      </div>
+
+      <!-- Search Section -->
+      <div class="section bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Search</h2>
+        <form id="searchForm" class="space-y-4">
+          <div>
+            <label class="block">Query</label>
+            <input
+              type="text"
+              id="searchQuery"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <div>
+            <label class="block">Category ID</label>
+            <input
+              type="text"
+              id="searchCategoryId"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <div>
+            <label class="block">Location</label>
+            <input
+              type="text"
+              id="searchLocation"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Search
+          </button>
+        </form>
+        <table class="w-full border mt-4">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Type</th>
+              <th class="border p-2">Name</th>
+              <th class="border p-2">Details</th>
+            </tr>
+          </thead>
+          <tbody id="searchTable"></tbody>
+        </table>
+        <p id="searchError" class="error hidden"></p>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:3000/api";
+      let token = localStorage.getItem("token");
+
+      // Helper to show/hide elements
+      const toggleElement = (id, show) => {
+        document.getElementById(id).classList.toggle("hidden", !show);
+      };
+
+      // Helper to make API requests
+      const apiRequest = async (method, endpoint, data = null, auth = true) => {
+        const headers = { "Content-Type": "application/json" };
+        if (auth && token) headers["Authorization"] = `Bearer ${token}`;
+        const options = { method, headers };
+        if (data) options.body = JSON.stringify(data);
+        const res = await fetch(`${API_BASE}/${endpoint}`, options);
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error?.message || "Request failed");
+        return json;
+      };
+
+      // Login
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          try {
+            const emailOrPhone = document
+              .getElementById("loginEmailOrPhone")
+              .value.trim();
+            const pwd = document.getElementById("loginPassword").value;
+            if (!emailOrPhone || !pwd)
+              throw new Error("Email/Phone and password are required");
+            const data = emailOrPhone.includes("@")
+              ? { email: emailOrPhone, pwd }
+              : { phone_no: emailOrPhone, pwd };
+            const res = await apiRequest("POST", "auth/login", data, false);
+            token = res.token;
+            localStorage.setItem("token", token);
+            toggleElement("loginError", false);
+            alert("Login successful");
+            loadAllData();
+          } catch (err) {
+            document.getElementById("loginError").textContent = err.message;
+            toggleElement("loginError", true);
+          }
+        });
+
+      // Register
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          try {
+            const data = {
+              name: document.getElementById("registerName").value.trim(),
+              email: document.getElementById("registerEmail").value.trim(),
+              phone_no: document.getElementById("registerPhone").value.trim(),
+              pwd: document.getElementById("registerPassword").value,
+              address: document.getElementById("registerAddress").value.trim(),
+              user_type: document.getElementById("registerUserType").value,
+            };
+            if (!data.name || !data.email || !data.phone_no || !data.pwd) {
+              throw new Error("Name, email, phone, and password are required");
+            }
+            await apiRequest("POST", "auth/register", data, false);
+            toggleElement("registerError", false);
+            alert("Registration successful");
+          } catch (err) {
+            document.getElementById("registerError").textContent = err.message;
+            toggleElement("registerError", true);
+          }
+        });
+
+      // User Management
+      const userForm = document.getElementById("userForm");
+      document.getElementById("addUser").addEventListener("click", () => {
+        userForm.reset();
+        document.getElementById("userId").value = "";
+        toggleElement("userForm", true);
+      });
+      document
+        .getElementById("userCancel")
+        .addEventListener("click", () => toggleElement("userForm", false));
+      userForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const id = document.getElementById("userId").value;
+          const data = {
+            name: document.getElementById("userName").value.trim(),
+            email: document.getElementById("userEmail").value.trim(),
+            phone_no: document.getElementById("userPhone").value.trim(),
+            address: document.getElementById("userAddress").value.trim(),
+            user_type: document.getElementById("userUserType").value,
+            is_active: document.getElementById("userIsActive").checked,
+          };
+          if (!data.name || !data.email || !data.phone_no)
+            throw new Error("Name, email, and phone are required");
+          if (document.getElementById("userPassword").value) {
+            data.pwd = document.getElementById("userPassword").value;
+          }
+          await apiRequest(
+            id ? "PUT" : "POST",
+            id ? `users/${id}` : "users",
+            data
+          );
+          toggleElement("userForm", false);
+          toggleElement("userError", false);
+          loadUsers();
+        } catch (err) {
+          document.getElementById("userError").textContent = err.message;
+          toggleElement("userError", true);
+        }
+      });
+
+      const loadUsers = async () => {
+        try {
+          const users = await apiRequest("GET", "users");
+          const tbody = document.getElementById("userTable");
+          tbody.innerHTML = users
+            .map(
+              (u) => `
+      <tr>
+        <td class="border p-2">${u.name}</td>
+        <td class="border p-2">${u.email}</td>
+        <td class="border p-2">${u.phone_no}</td>
+        <td class="border p-2">${u.user_type}</td>
+        <td class="border p-2">${u.is_active ? "Yes" : "No"}</td>
+        <td class="border p-2">
+          <button onclick="editUser('${
+            u._id
+          }')" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+          <button onclick="deleteUser('${
+            u._id
+          }')" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+        </td>
+      </tr>
+    `
+            )
+            .join("");
+        } catch (err) {
+          document.getElementById("userError").textContent = err.message;
+          toggleElement("userError", true);
+        }
+      };
+
+      window.editUser = async (id) => {
+        try {
+          const user = await apiRequest("GET", `users/${id}`);
+          document.getElementById("userId").value = user._id;
+          document.getElementById("userName").value = user.name;
+          document.getElementById("userEmail").value = user.email;
+          document.getElementById("userPhone").value = user.phone_no;
+          document.getElementById("userAddress").value = user.address || "";
+          document.getElementById("userUserType").value = user.user_type;
+          document.getElementById("userIsActive").checked = user.is_active;
+          document.getElementById("userPassword").value = "";
+          toggleElement("userForm", true);
+        } catch (err) {
+          document.getElementById("userError").textContent = err.message;
+          toggleElement("userError", true);
+        }
+      };
+
+      window.deleteUser = async (id) => {
+        if (confirm("Delete this user?")) {
+          try {
+            await apiRequest("DELETE", `users/${id}`);
+            loadUsers();
+          } catch (err) {
+            document.getElementById("userError").textContent = err.message;
+            toggleElement("userError", true);
+          }
+        }
+      };
+
+      // Category Management
+      const categoryForm = document.getElementById("categoryForm");
+      document.getElementById("addCategory").addEventListener("click", () => {
+        categoryForm.reset();
+        document.getElementById("categoryId").value = "";
+        toggleElement("categoryForm", true);
+      });
+      document
+        .getElementById("categoryCancel")
+        .addEventListener("click", () => toggleElement("categoryForm", false));
+      categoryForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const id = document.getElementById("categoryId").value;
+          const data = {
+            name: document.getElementById("categoryName").value.trim(),
+          };
+          if (!data.name) throw new Error("Category name is required");
+          await apiRequest(
+            id ? "PUT" : "POST",
+            id ? `categories/${id}` : "categories",
+            data
+          );
+          toggleElement("categoryForm", false);
+          toggleElement("categoryError", false);
+          loadCategories();
+        } catch (err) {
+          document.getElementById("categoryError").textContent = err.message;
+          toggleElement("categoryError", true);
+        }
+      });
+
+      const loadCategories = async () => {
+        try {
+          const categories = await apiRequest("GET", "categories");
+          const tbody = document.getElementById("categoryTable");
+          tbody.innerHTML = categories
+            .map(
+              (c) => `
+      <tr>
+        <td class="border p-2">${c.name}</td>
+        <td class="border p-2">
+          <button onclick="editCategory('${c._id}')" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+          <button onclick="deleteCategory('${c._id}')" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+        </td>
+      </tr>
+    `
+            )
+            .join("");
+        } catch (err) {
+          document.getElementById("categoryError").textContent = err.message;
+          toggleElement("categoryError", true);
+        }
+      };
+
+      window.editCategory = async (id) => {
+        try {
+          const category = await apiRequest("GET", `categories/${id}`);
+          document.getElementById("categoryId").value = category._id;
+          document.getElementById("categoryName").value = category.name;
+          toggleElement("categoryForm", true);
+        } catch (err) {
+          document.getElementById("categoryError").textContent = err.message;
+          toggleElement("categoryError", true);
+        }
+      };
+
+      window.deleteCategory = async (id) => {
+        if (confirm("Delete this category?")) {
+          try {
+            await apiRequest("DELETE", `categories/${id}`);
+            loadCategories();
+          } catch (err) {
+            document.getElementById("categoryError").textContent = err.message;
+            toggleElement("categoryError", true);
+          }
+        }
+      };
+
+      // Healthcenter Management
+      const healthcenterForm = document.getElementById("healthcenterForm");
+      document
+        .getElementById("addHealthcenter")
+        .addEventListener("click", () => {
+          healthcenterForm.reset();
+          document.getElementById("healthcenterId").value = "";
+          toggleElement("healthcenterForm", true);
+        });
+      document
+        .getElementById("healthcenterCancel")
+        .addEventListener("click", () =>
+          toggleElement("healthcenterForm", false)
+        );
+      healthcenterForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const id = document.getElementById("healthcenterId").value;
+          const data = {
+            name: document.getElementById("healthcenterName").value.trim(),
+            location: document
+              .getElementById("healthcenterLocation")
+              .value.trim(),
+            user_id: document.getElementById("healthcenterUserId").value.trim(),
+            contact_detail: document
+              .getElementById("healthcenterContact")
+              .value.trim(),
+            healCaredetail: document
+              .getElementById("healthcenterDetail")
+              .value.trim(),
+          };
+          if (
+            !data.name ||
+            !data.location ||
+            !data.user_id ||
+            !data.contact_detail
+          ) {
+            throw new Error(
+              "Name, location, user ID, and contact are required"
+            );
+          }
+          await apiRequest(
+            id ? "PUT" : "POST",
+            id ? `healthcenters/${id}` : "healthcenters",
+            data
+          );
+          toggleElement("healthcenterForm", false);
+          toggleElement("healthcenterError", false);
+          loadHealthcenters();
+        } catch (err) {
+          document.getElementById("healthcenterError").textContent =
+            err.message;
+          toggleElement("healthcenterError", true);
+        }
+      });
+
+      const loadHealthcenters = async () => {
+        try {
+          const healthcenters = await apiRequest("GET", "healthcenters");
+          const tbody = document.getElementById("healthcenterTable");
+          tbody.innerHTML = healthcenters
+            .map(
+              (h) => `
+      <tr>
+        <td class="border p-2">${h.name}</td>
+        <td class="border p-2">${h.location}</td>
+        <td class="border p-2">${h.user_id?.name || "N/A"}</td>
+        <td class="border p-2">${h.contact_detail}</td>
+        <td class="border p-2">
+          <button onclick="editHealthcenter('${
+            h._id
+          }')" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+          <button onclick="deleteHealthcenter('${
+            h._id
+          }')" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+        </td>
+      </tr>
+    `
+            )
+            .join("");
+        } catch (err) {
+          document.getElementById("healthcenterError").textContent =
+            err.message;
+          toggleElement("healthcenterError", true);
+        }
+      };
+
+      window.editHealthcenter = async (id) => {
+        try {
+          const healthcenter = await apiRequest("GET", `healthcenters/${id}`);
+          document.getElementById("healthcenterId").value = healthcenter._id;
+          document.getElementById("healthcenterName").value = healthcenter.name;
+          document.getElementById("healthcenterLocation").value =
+            healthcenter.location;
+          document.getElementById("healthcenterUserId").value =
+            healthcenter.user_id?._id || healthcenter.user_id || "";
+          document.getElementById("healthcenterContact").value =
+            healthcenter.contact_detail;
+          document.getElementById("healthcenterDetail").value =
+            healthcenter.healCaredetail || "";
+          toggleElement("healthcenterForm", true);
+        } catch (err) {
+          document.getElementById("healthcenterError").textContent =
+            err.message;
+          toggleElement("healthcenterError", true);
+        }
+      };
+
+      window.deleteHealthcenter = async (id) => {
+        if (confirm("Delete this health center?")) {
+          try {
+            await apiRequest("DELETE", `healthcenters/${id}`);
+            loadHealthcenters();
+          } catch (err) {
+            document.getElementById("healthcenterError").textContent =
+              err.message;
+            toggleElement("healthcenterError", true);
+          }
+        }
+      };
+
+      // Doctor Management
+      const doctorForm = document.getElementById("doctorForm");
+      document.getElementById("addDoctor").addEventListener("click", () => {
+        doctorForm.reset();
+        document.getElementById("doctorId").value = "";
+        toggleElement("doctorForm", true);
+      });
+      document
+        .getElementById("doctorCancel")
+        .addEventListener("click", () => toggleElement("doctorForm", false));
+      doctorForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const id = document.getElementById("doctorId").value;
+          const categoryIds = document
+            .getElementById("doctorCategoryIds")
+            .value.split(",")
+            .map((id) => id.trim())
+            .filter((id) => id);
+          const healthcenterIds = document
+            .getElementById("doctorHealthcenterIds")
+            .value.split(",")
+            .map((id) => id.trim())
+            .filter((id) => id);
+          if (!categoryIds.length || !healthcenterIds.length) {
+            throw new Error(
+              "At least one category and health center ID are required"
+            );
+          }
+          const data = {
+            name: document.getElementById("doctorName").value.trim(),
+            description: document
+              .getElementById("doctorDescription")
+              .value.trim(),
+            category_id: categoryIds,
+            healthcenter_id: healthcenterIds,
+            doctorRating:
+              parseFloat(document.getElementById("doctorRating").value) ||
+              undefined,
+          };
+          if (!data.name) throw new Error("Doctor name is required");
+          await apiRequest(
+            id ? "PUT" : "POST",
+            id ? `doctors/${id}` : "doctors",
+            data
+          );
+          toggleElement("doctorForm", false);
+          toggleElement("doctorError", false);
+          loadDoctors();
+        } catch (err) {
+          document.getElementById("doctorError").textContent = err.message;
+          toggleElement("doctorError", true);
+        }
+      });
+
+      const loadDoctors = async () => {
+        try {
+          const doctors = await apiRequest("GET", "doctors");
+          const tbody = document.getElementById("doctorTable");
+          tbody.innerHTML = doctors
+            .map(
+              (d) => `
+      <tr>
+        <td class="border p-2">${d.name}</td>
+        <td class="border p-2">${
+          d.category_id?.map((c) => c.name).join(", ") || "N/A"
+        }</td>
+        <td class="border p-2">${
+          d.healthcenter_id?.map((h) => h.name).join(", ") || "N/A"
+        }</td>
+        <td class="border p-2">${d.doctorRating || "N/A"}</td>
+        <td class="border p-2">
+          <button onclick="editDoctor('${
+            d._id
+          }')" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+          <button onclick="deleteDoctor('${
+            d._id
+          }')" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+        </td>
+      </tr>
+    `
+            )
+            .join("");
+        } catch (err) {
+          document.getElementById("doctorError").textContent = err.message;
+          toggleElement("doctorError", true);
+        }
+      };
+
+      window.editDoctor = async (id) => {
+        try {
+          const doctor = await apiRequest("GET", `doctors/${id}`);
+          document.getElementById("doctorId").value = doctor._id;
+          document.getElementById("doctorName").value = doctor.name;
+          document.getElementById("doctorDescription").value =
+            doctor.description || "";
+          document.getElementById("doctorCategoryIds").value =
+            doctor.category_id?.map((c) => c._id || c).join(", ") || "";
+          document.getElementById("doctorHealthcenterIds").value =
+            doctor.healthcenter_id?.map((h) => h._id || h).join(", ") || "";
+          document.getElementById("doctorRating").value =
+            doctor.doctorRating || "";
+          toggleElement("doctorForm", true);
+        } catch (err) {
+          document.getElementById("doctorError").textContent = err.message;
+          toggleElement("doctorError", true);
+        }
+      };
+
+      window.deleteDoctor = async (id) => {
+        if (confirm("Delete this doctor?")) {
+          try {
+            await apiRequest("DELETE", `doctors/${id}`);
+            loadDoctors();
+          } catch (err) {
+            document.getElementById("doctorError").textContent = err.message;
+            toggleElement("doctorError", true);
+          }
+        }
+      };
+
+      // Schedule Management
+      const scheduleForm = document.getElementById("scheduleForm");
+      document.getElementById("addSchedule").addEventListener("click", () => {
+        scheduleForm.reset();
+        document.getElementById("scheduleId").value = "";
+        toggleElement("scheduleForm", true);
+      });
+      document
+        .getElementById("scheduleCancel")
+        .addEventListener("click", () => toggleElement("scheduleForm", false));
+      scheduleForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const id = document.getElementById("scheduleId").value;
+          const timeSlotsInput = document
+            .getElementById("scheduleTimeSlots")
+            .value.trim();
+          let time_slots;
+          try {
+            time_slots = JSON.parse(timeSlotsInput);
+            if (
+              !Array.isArray(time_slots) ||
+              !time_slots.every(
+                (t) => t.startTime && t.endTime && "isAvailable" in t
+              )
+            ) {
+              throw new Error("Invalid time slots format");
+            }
+          } catch {
+            throw new Error("Invalid JSON in time slots");
+          }
+          const data = {
+            doctor_id: document.getElementById("scheduleDoctorId").value.trim(),
+            date: document.getElementById("scheduleDate").value,
+            time_slots,
+          };
+          if (!data.doctor_id || !data.date)
+            throw new Error("Doctor ID and date are required");
+          await apiRequest(
+            id ? "PUT" : "POST",
+            id ? `schedules/${id}` : "schedules",
+            data
+          );
+          toggleElement("scheduleForm", false);
+          toggleElement("scheduleError", false);
+          loadSchedules();
+        } catch (err) {
+          document.getElementById("scheduleError").textContent = err.message;
+          toggleElement("scheduleError", true);
+        }
+      });
+
+      const loadSchedules = async () => {
+        try {
+          const schedules = await apiRequest("GET", "schedules");
+          const tbody = document.getElementById("scheduleTable");
+          tbody.innerHTML = schedules
+            .map(
+              (s) => `
+      <tr>
+        <td class="border p-2">${s.doctor_id?.name || "N/A"}</td>
+        <td class="border p-2">${
+          s.date ? new Date(s.date).toLocaleDateString() : "N/A"
+        }</td>
+        <td class="border p-2">${
+          s.time_slots
+            ?.map(
+              (t) =>
+                `${t.startTime}-${t.endTime} (${
+                  t.isAvailable ? "Available" : "Booked"
+                })`
+            )
+            .join(", ") || "N/A"
+        }</td>
+        <td class="border p-2">
+          <button onclick="editSchedule('${
+            s._id
+          }')" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+          <button onclick="deleteSchedule('${
+            s._id
+          }')" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+        </td>
+      </tr>
+    `
+            )
+            .join("");
+        } catch (err) {
+          document.getElementById("scheduleError").textContent = err.message;
+          toggleElement("scheduleError", true);
+        }
+      };
+
+      window.editSchedule = async (id) => {
+        try {
+          const schedule = await apiRequest("GET", `schedules/${id}`);
+          document.getElementById("scheduleId").value = schedule._id;
+          document.getElementById("scheduleDoctorId").value =
+            schedule.doctor_id?._id || schedule.doctor_id || "";
+          document.getElementById("scheduleDate").value = schedule.date
+            ? new Date(schedule.date).toISOString().split("T")[0]
+            : "";
+          document.getElementById("scheduleTimeSlots").value =
+            schedule.time_slots
+              ? JSON.stringify(schedule.time_slots, null, 2)
+              : "[]";
+          toggleElement("scheduleForm", true);
+        } catch (err) {
+          document.getElementById("scheduleError").textContent = err.message;
+          toggleElement("scheduleError", true);
+        }
+      };
+
+      window.deleteSchedule = async (id) => {
+        if (confirm("Delete this schedule?")) {
+          try {
+            await apiRequest("DELETE", `schedules/${id}`);
+            loadSchedules();
+          } catch (err) {
+            document.getElementById("scheduleError").textContent = err.message;
+            toggleElement("scheduleError", true);
+          }
+        }
+      };
+
+      // Appointment Management
+      const appointmentForm = document.getElementById("appointmentForm");
+      document
+        .getElementById("addAppointment")
+        .addEventListener("click", () => {
+          appointmentForm.reset();
+          document.getElementById("appointmentId").value = "";
+          toggleElement("appointmentForm", true);
+        });
+      document
+        .getElementById("appointmentCancel")
+        .addEventListener("click", () =>
+          toggleElement("appointmentForm", false)
+        );
+      appointmentForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const id = document.getElementById("appointmentId").value;
+          const data = {
+            doctor_id: document
+              .getElementById("appointmentDoctorId")
+              .value.trim(),
+            healthCare_id: document
+              .getElementById("appointmentHealthcenterId")
+              .value.trim(),
+            schedule_id: document
+              .getElementById("appointmentScheduleId")
+              .value.trim(),
+            time_slot: {
+              startTime: document
+                .getElementById("appointmentTimeSlotStart")
+                .value.trim(),
+              endTime: document
+                .getElementById("appointmentTimeSlotEnd")
+                .value.trim(),
+            },
+          };
+          if (
+            !data.doctor_id ||
+            !data.healthCare_id ||
+            !data.schedule_id ||
+            !data.time_slot.startTime ||
+            !data.time_slot.endTime
+          ) {
+            throw new Error("All fields are required");
+          }
+          await apiRequest(
+            id ? "PUT" : "POST",
+            id ? `appointments/${id}` : "appointments",
+            data
+          );
+          toggleElement("appointmentForm", false);
+          toggleElement("appointmentError", false);
+          loadAppointments();
+        } catch (err) {
+          document.getElementById("appointmentError").textContent = err.message;
+          toggleElement("appointmentError", true);
+        }
+      });
+
+      const loadAppointments = async () => {
+        try {
+          const appointments = await apiRequest("GET", "appointments");
+          const tbody = document.getElementById("appointmentTable");
+          tbody.innerHTML = appointments
+            .map(
+              (a) => `
+      <tr>
+        <td class="border p-2">${a.doctor_id?.name || "N/A"}</td>
+        <td class="border p-2">${a.healthCare_id?.name || "N/A"}</td>
+        <td class="border p-2">${a.patient_id?.name || "N/A"}</td>
+        <td class="border p-2">${
+          a.selected_date?.schedule_id?.date
+            ? new Date(a.selected_date.schedule_id.date).toLocaleDateString()
+            : "N/A"
+        } ${a.selected_date?.time_slot?.startTime || ""}--${
+                a.selected_date?.time_slot?.endTime || ""
+              }</td>
+        <td class="border p-2">${a.status || "N/A"}</td>
+        <td class="border p-2">
+          <button onclick="editAppointment('${
+            a._id
+          }')" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+          <button onclick="deleteAppointment('${
+            a._id
+          }')" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+        </td>
+      </tr>
+    `
+            )
+            .join("");
+        } catch (err) {
+          document.getElementById("appointmentError").textContent = err.message;
+          toggleElement("appointmentError", true);
+        }
+      };
+
+      window.editAppointment = async (id) => {
+        try {
+          const appointment = await apiRequest("GET", `appointments/${id}`);
+          document.getElementById("appointmentId").value = appointment._id;
+          document.getElementById("appointmentDoctorId").value =
+            appointment.doctor_id?._id || appointment.doctor_id || "";
+          document.getElementById("appointmentHealthcenterId").value =
+            appointment.healthCare_id?._id || appointment.healthCare_id || "";
+          document.getElementById("appointmentScheduleId").value =
+            appointment.selected_date?.schedule_id?._id ||
+            appointment.selected_date?.schedule_id ||
+            "";
+          document.getElementById("appointmentTimeSlotStart").value =
+            appointment.selected_date?.time_slot?.startTime || "";
+          document.getElementById("appointmentTimeSlotEnd").value =
+            appointment.selected_date?.time_slot?.endTime || "";
+          toggleElement("appointmentForm", true);
+        } catch (err) {
+          document.getElementById("appointmentError").textContent = err.message;
+          toggleElement("appointmentError", true);
+        }
+      };
+
+      window.deleteAppointment = async (id) => {
+        if (confirm("Delete this appointment?")) {
+          try {
+            await apiRequest("DELETE", `appointments/${id}`);
+            loadAppointments();
+          } catch (err) {
+            document.getElementById("appointmentError").textContent =
+              err.message;
+            toggleElement("appointmentError", true);
+          }
+        }
+      };
+
+      // Recommendation
+      document
+        .getElementById("fetchRecommendations")
+        .addEventListener("click", async () => {
+          try {
+            const data = await apiRequest("GET", "recommendations");
+            const tbody = document.getElementById("recommendationTable");
+            const rows = [];
+            data.recommendedDoctors?.forEach((d) => {
+              rows.push(`
+        <tr>
+          <td class="border p-2">Doctor</td>
+          <td class="border p-2">${d.name}</td>
+          <td class="border p-2">Rating: ${
+            d.doctorRating || "N/A"
+          }, Categories: ${
+                d.category_id?.map((c) => c.name).join(", ") || "N/A"
+              }</td>
+        </tr>
+      `);
+            });
+            data.recommendedHealthcenters?.forEach((h) => {
+              rows.push(`
+        <tr>
+          <td class="border p-2">Healthcenter</td>
+          <td class="border p-2">${h.name}</td>
+          <td class="border p-2">Location: ${h.location || "N/A"}</td>
+        </tr>
+      `);
+            });
+            tbody.innerHTML = rows.join("");
+            toggleElement("recommendationError", false);
+          } catch (err) {
+            document.getElementById("recommendationError").textContent =
+              err.message;
+            toggleElement("recommendationError", true);
+          }
+        });
+
+      // Search
+      document
+        .getElementById("searchForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          try {
+            const query = document.getElementById("searchQuery").value.trim();
+            const categoryId = document
+              .getElementById("searchCategoryId")
+              .value.trim();
+            const location = document
+              .getElementById("searchLocation")
+              .value.trim();
+            const params = new URLSearchParams();
+            if (query) params.append("query", query);
+            if (categoryId) params.append("category_id", categoryId);
+            if (location) params.append("location", location);
+            const data = await apiRequest("GET", `search?${params.toString()}`);
+            const tbody = document.getElementById("searchTable");
+            const rows = [];
+            data.doctors?.forEach((d) => {
+              rows.push(`
+        <tr>
+          <td class="border p-2">Doctor</td>
+          <td class="border p-2">${d.name}</td>
+          <td class="border p-2">Rating: ${
+            d.doctorRating || "N/A"
+          }, Categories: ${
+                d.category_id?.map((c) => c.name).join(", ") || "N/A"
+              }</td>
+        </tr>
+      `);
+            });
+            data.healthcenters?.forEach((h) => {
+              rows.push(`
+        <tr>
+          <td class="border p-2">Healthcenter</td>
+          <td class="border p-2">${h.name}</td>
+          <td class="border p-2">Location: ${h.location || "N/A"}</td>
+        </tr>
+      `);
+            });
+            tbody.innerHTML = rows.join("");
+            toggleElement("searchError", false);
+          } catch (err) {
+            document.getElementById("searchError").textContent = err.message;
+            toggleElement("searchError", true);
+          }
+        });
+
+      // Load all data on page load if authenticated
+      const loadAllData = () => {
+        if (token) {
+          loadUsers();
+          loadCategories();
+          loadHealthcenters();
+          loadDoctors();
+          loadSchedules();
+          loadAppointments();
+        }
+      };
+      loadAllData();
+    </script>
+  </body>
+</html>
