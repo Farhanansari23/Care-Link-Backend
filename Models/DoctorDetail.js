@@ -8,9 +8,7 @@ const DoctorDetailSchema = new mongoose.Schema({
   category_id: [
     { type: Schema.Types.ObjectId, ref: "Category", required: true },
   ],
-  healthcenter_id: [
-    { type: Schema.Types.ObjectId, ref: "HealthCenter", required: true },
-  ],
+  healthcenter_id: [{ type: Schema.Types.ObjectId, ref: "HealthCenter" }],
   doctorRating: { type: Number, min: 0, max: 5, default: 0 },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
