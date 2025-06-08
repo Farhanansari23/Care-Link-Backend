@@ -4,24 +4,44 @@ const DoctorDetail = require("../Models/DoctorDetail");
 exports.getHealthcenters = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const populateDoctorFields = {
+      path: "doctor_id",
+      select: "name doctorRating schedule category_id",
+      populate: [
+        {
+          path: "schedule",
+          select: "time_slots", // adjust based on your Schedule schema
+        },
+        {
+          path: "category_id",
+          select: "name", // adjust based on your Category schema
+        },
+      ],
+    };
+
     if (id) {
-      const healthcenter = await Healthcenter.findById(id).populate(
-        "doctor_id",
-        "name email"
-      );
-      if (!healthcenter)
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: "Invalid healthcenter ID format" });
+      }
+
+      const healthcenter = await Healthcenter.findById(id).populate(populateDoctorFields);
+
+      if (!healthcenter) {
         return res.status(404).json({ error: "Healthcenter not found" });
-      return res.json(healthcenter);
+      }
+
+      return res.status(200).json(healthcenter);
     }
-    const healthcenters = await Healthcenter.find().populate(
-      "doctor_id",
-      "name email"
-    );
-    res.json(healthcenters);
+
+    const healthcenters = await Healthcenter.find().populate(populateDoctorFields);
+    return res.status(200).json(healthcenters);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Error fetching healthcenters:", error);
+    return res.status(500).json({ error: "Server error" });
   }
 };
+
 
 exports.createHealthcenter = async (req, res) => {
   try {

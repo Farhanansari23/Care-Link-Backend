@@ -26,9 +26,9 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, pwd } = req.body;
-    console.log("email", email);
+    // console.log("email", email);
     const user = await userDetail.findOne({ email });
-    console.log("user", user);
+    // console.log("user", user);
     if (!user || !user.is_active) {
       return res
         .status(401)
