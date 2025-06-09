@@ -1,5 +1,6 @@
 const Healthcenter = require("../Models/Healthcenter");
 const DoctorDetail = require("../Models/DoctorDetail");
+const mongoose = require("mongoose")
 
 exports.getHealthcenters = async (req, res) => {
   try {
@@ -7,7 +8,7 @@ exports.getHealthcenters = async (req, res) => {
 
     const populateDoctorFields = {
       path: "doctor_id",
-      select: "name doctorRating schedule category_id",
+      select: "name doctorRating description schedule category_id",
       populate: [
         {
           path: "schedule",
